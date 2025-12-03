@@ -5,15 +5,18 @@ services:
     build:
       context: ./docker/db/
       dockerfile: Dockerfile
+      args:
+        - BASEOSM_DUMP=${BASEOSM_DUMP}
+        - RESTORE_SH=${RESTORE_SH}
     container_name: cne-base
-    # restart: unless-stopped
-    # stdin_open: true
-    environment:
-      - POSTGRES_DB=cne
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=kzwip43
-      - ALLOW_IP_RANGE=0.0.0.0/0
+    restart: on-failure
+    healthcheck:
+      test: "exit 0"
+    stdin_open: true
+    env_file:
+      - '.env'
     volumes:
       - dbdata:/var/lib/postgresql/data
+
 volumes:
   dbdata:
