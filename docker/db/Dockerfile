@@ -21,11 +21,11 @@ COPY entrypoints/restore.sh ${RESTORE_SH}
 RUN chmod +x ${RESTORE_SH}
 
 # Avoid to start the PostgreSQL daemon (we don’t need it on this step)
-RUN ["sed", "-i", "s/exec \"$@\"/echo \"skipping...\"/", "/usr/local/bin/docker-entrypoint.sh"]
-RUN /usr/local/bin/docker-entrypoint.sh postgres
+# RUN ["sed", "-i", "s/exec \"$@\"/echo \"skipping...\"/", "/usr/local/bin/docker-entrypoint.sh"]
+# RUN /usr/local/bin/docker-entrypoint.sh postgres
 
 ####################################################################
-FROM harbor.prd.afip.gob.ar/dockerhub/pgrouting/pgrouting:16-3.5-3.8
+# FROM harbor.prd.afip.gob.ar/dockerhub/pgrouting/pgrouting:16-3.5-3.8
 
-# Copy the initialized data from the builder stage
-COPY --from=builder /var/lib/postgresql/data /var/lib/postgresql/data
+# # Copy the initialized data from the builder stage
+# COPY --from=builder /var/lib/postgresql/data /var/lib/postgresql/data

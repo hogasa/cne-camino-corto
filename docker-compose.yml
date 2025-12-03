@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  db:
+    build:
+      context: ./docker/db/
+      dockerfile: Dockerfile
+    container_name: cne-base
+    # restart: unless-stopped
+    # stdin_open: true
+    environment:
+      - POSTGRES_DB=cne
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=kzwip43
+      - ALLOW_IP_RANGE=0.0.0.0/0
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+volumes:
+  dbdata:
