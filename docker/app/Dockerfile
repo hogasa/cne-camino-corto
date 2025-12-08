@@ -9,8 +9,10 @@ COPY ./docker/app/conf/etc/pip.conf /etc/
 WORKDIR /app
 
 COPY ./requirements.txt .
-RUN pip install --upgrade pip && \
+RUN unset HTTP_PROXY && unset HTTPS_PROXY && unset http_proxy && unset https_proxy && \
+    pip install --upgrade pip && \
     pip install --no-cache-dir -r ./requirements.txt
 
 COPY app .
-CMD ["tail", "-f", "/dev/null"]
+
+CMD ["uvicorn", "main:app", "--reload", "--host", "0.0.0.0", "--port", "8000"]

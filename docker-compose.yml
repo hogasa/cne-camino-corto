@@ -7,6 +7,8 @@ services:
       dockerfile: ./docker/app/Dockerfile
     depends_on:
       - db
+    ports:
+      - 8000:8000
     volumes:
       - ./app:/app
   db:
