@@ -4,13 +4,13 @@ ENV PIP_DISABLE_PIP_VERSION_CHECK=1
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-COPY ./docker/app/conf/certs/cert.crt /etc/ssl/certs/ca-certificates.crt
+COPY ./docker/app/conf/certs/ /etc/ssl/certs/
 COPY ./docker/app/conf/etc/pip.conf /etc/
 WORKDIR /app
 
 COPY ./requirements.txt .
-RUN unset HTTP_PROXY && unset HTTPS_PROXY && unset http_proxy && unset https_proxy && \
-    pip install --upgrade pip && \
+# RUN unset HTTP_PROXY && unset HTTPS_PROXY && unset http_proxy && unset https_proxy && \
+RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r ./requirements.txt
 
 COPY app .
