@@ -1,5 +1,8 @@
 from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import JSONResponse
+from io import StringIO
+import csv
+from camino_mas_corto import camino_mas_corto
 
 app = FastAPI()
 
@@ -8,19 +11,36 @@ async def root():
     return {"message": "Hello World"}
 
 
-@app.post("/api/camino_mas_corto")
-async def camino_mas_corto(file: UploadFile = File(...)):
+@app.post("/api/caminos_mas_cortos")
+async def caminos_mas_cortos(file: UploadFile = File(...)):
+    response = []
     try:
-        with open(file.filename, "wb") as myFile:
-            content = await file.read()
-            myFile.write(content)
-            myFile.close()
-            print(file.filename)
-            return JSONResponse(content={
-                "saved": True
-            }, status_code=200)
-    except FileNotFoundError as e:
-        print(e)
+        if file.size == 0:
+            raise Exception("No se especificó el archivo.")
+        content = await file.read()
+        myCsv = StringIO(content.decode('utf-8'))
+        reader = csv.reader(myCsv, delimiter=',')
+        for row in reader:
+            source = [float(row[1]), float(row[2])]
+            target = [float(row[4]), float(row[5])]
+            caminos = camino_mas_corto(source, target)
+            response.append({
+                "origen": row[0].strip(),
+                "origen_lon": row[1].strip(),
+                "origen_lat": row[2].strip(),
+                "destino": row[3].strip(),
+                "destino_lon": row[4].strip(),
+                "destino_lat": row[5].strip(),
+                "ruta": caminos[0],
+                "distancia": round(caminos[1], 2),
+                "tiempo": round(caminos[2], 2)
+            })
+        return JSONResponse(
+            content=response,
+            headers={"Content-Disposition": "attachment;filename=rutas.json"},
+            media_type="application/json",
+            status_code=200)
+    except Exception as e:
         return JSONResponse(content={
-            "saved": False
+            "error": str(e)
         }, status_code=404)
