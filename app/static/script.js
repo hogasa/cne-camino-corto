@@ -55,38 +55,37 @@ removeBtn.addEventListener('click', () => {
     hideSuccess();
 });
 
-submitBtn.addEventListener('click', () => {
-    if (selectedFile) {
-        submitBtn.textContent = 'Uploading...';
-        submitBtn.disabled = true;
-        progressBar.classList.add('active');
-        
-        // Simulate upload progress
-        let progress = 0;
-        const interval = setInterval(() => {
-            progress += Math.random() * 30;
-            if (progress > 100) progress = 100;
-            progressFill.style.width = progress + '%';
-            
-            if (progress === 100) {
-                clearInterval(interval);
-                setTimeout(() => {
-                    progressBar.classList.remove('active');
-                    successMessage.classList.add('active');
-                    submitBtn.textContent = 'Upload Complete';
-                    
-                    setTimeout(() => {
-                        selectedFile = null;
-                        fileInput.value = '';
-                        filePreview.classList.remove('active');
-                        submitBtn.textContent = 'Upload File';
-                        submitBtn.disabled = true;
-                        progressFill.style.width = '0%';
-                        hideSuccess();
-                    }, 2500);
-                }, 300);
-            }
-        }, 200);
+submitBtn.addEventListener('click', async () => {
+    const formData = new FormData();
+    formData.append('file', fileInput.files[0]);
+    hideError();
+    hideSuccess();
+    submitBtn.textContent = 'Procesando';
+    submitBtn.disabled = true;
+
+    try {
+        const response = await fetch('/api/caminos_mas_cortos', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (response.ok) {
+            const blob = await response.blob();
+            const blobUrl = URL.createObjectURL(blob);
+            saveFile(blobUrl, 'rutas.json');
+            URL.revokeObjectURL(blobUrl);
+
+            showSuccess('Archivo procesado con éxito.');
+        } else {
+            console.error('Error de procesamiento', response.statusText);
+            throw new Error("Se produjo un error en el procesamiento.");
+        }
+    } catch (error) {
+        console.error('Error during upload:', error);
+        showError('Error de procesamiento.');
+    } finally {
+        submitBtn.textContent = 'Procesar';
+        submitBtn.disabled = false;
     }
 });
 
@@ -97,13 +96,13 @@ function handleFile(file) {
     // Validate file type
     const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
     if (!ALLOWED_TYPES.includes(file.type) && !ALLOWED_EXTENSIONS.includes(fileExtension)) {
-        showError('Invalid file type. Please upload PDF, DOC, DOCX, JPG, PNG, or GIF files.');
+        showError('Formato inválido. Solo puede procesar archivos CSV.');
         return;
     }
 
     // Validate file size
     if (file.size > MAX_FILE_SIZE) {
-        showError(`File size exceeds 10MB. Your file is ${formatFileSize(file.size)}.`);
+        showError(`File size exceeds 100MB. Your file is ${formatFileSize(file.size)}.`);
         return;
     }
 
@@ -132,6 +131,20 @@ function hideError() {
     errorMessage.classList.remove('active');
 }
 
+function showSuccess(message) {
+    successText.textContent = message;
+    successMessage.classList.add('active');
+}
+
 function hideSuccess() {
     successMessage.classList.remove('active');
+}
+
+function saveFile(url, filename) {
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename || "file-name";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 }
