@@ -3,6 +3,7 @@ FROM harbor.prd.afip.gob.ar/dockerhub/library/python:3.12-slim-bullseye
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV PIP_ROOT_USER_ACTION=ignore
 
 COPY ./docker/app/conf/certs/ /etc/ssl/certs/
 COPY ./docker/app/conf/etc/pip.conf /etc/

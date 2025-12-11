@@ -116,7 +116,7 @@ body::after {
 
 .header h1 {
     font-family: 'Sora', sans-serif;
-    font-size: 36px;
+    font-size: 34px;
     font-weight: 800;
     background: linear-gradient(135deg, #1a1a1a 0%, #4a4a4a 100%);
     -webkit-background-clip: text;
