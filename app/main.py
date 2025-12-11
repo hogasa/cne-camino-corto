@@ -1,14 +1,18 @@
 from fastapi import FastAPI, UploadFile, File
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from io import StringIO
 import csv
 from camino_mas_corto import camino_mas_corto
 
 app = FastAPI()
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+@app.get("/", response_class=HTMLResponse)
+async def home():
+    with open("static/index.html") as f:
+        return f.read()
 
 
 @app.post("/api/caminos_mas_cortos")
