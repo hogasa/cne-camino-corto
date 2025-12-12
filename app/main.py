@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from io import StringIO
 import csv
-from camino_mas_corto import camino_mas_corto
+from camino_mas_corto import camino_mas_corto, generar_mapa
 
 app = FastAPI()
 
@@ -39,6 +39,27 @@ async def caminos_mas_cortos(file: UploadFile = File(...)):
                 "distancia": round(caminos[1], 2),
                 "tiempo": round(caminos[2], 2)
             })
+        return JSONResponse(
+            content=response,
+            headers={"Content-Disposition": "attachment;filename=rutas.json"},
+            media_type="application/json",
+            status_code=200)
+    except Exception as e:
+        return JSONResponse(content={
+            "error": str(e)
+        }, status_code=404)
+
+
+@app.get("/mapa", response_class=HTMLResponse)
+async def home():
+    with open("static/mapa.html") as f:
+        return f.read()
+
+
+@app.get("/api/generar_mapa")
+async def api_generar_mapa(origen_lon: float, origen_lat: float, destino_lon: float, destino_lat: float):
+    try:
+        response = generar_mapa([origen_lon, origen_lat], [destino_lon, destino_lat])
         return JSONResponse(
             content=response,
             headers={"Content-Disposition": "attachment;filename=rutas.json"},
