@@ -51,6 +51,8 @@ def camino_mas_corto(source, target):
             # print(route_ids)
 
             # 5. Obtener la geometría de la ruta como un MultiLineString unificado
+            if not route_ids:
+                raise Exception
             query_route = """
                 SELECT ST_AsText(ST_Union(geom_way)), SUM(km), SUM(km / kmh)
                 FROM chile_2po_4pgr
