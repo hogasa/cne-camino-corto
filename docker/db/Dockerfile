@@ -1,4 +1,4 @@
-FROM harbor.prd.afip.gob.ar/dockerhub/pgrouting/pgrouting:16-3.5-3.8 AS builder
+FROM pgrouting/pgrouting:16-3.5-3.8 AS builder
 
 ARG RESTORE_SH
 ARG BASEOSM_DUMP
