@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CNE - Caminos mas cortos</title>
+    <link rel="stylesheet" href="/static/css/mapa.css">
+    <link id="favicon" rel="icon" type="image/x-icon" href="/static/img/favicon.png">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Comisión Nacional de Energia</h1>
+            <p>Genera un mapa con el recorrido entre dos puntos dados.</p>
+        </div>
+
+        <div class="coords-area">
+            <div class="upload-text">
+                <h3>Origen</h3>
+                <div class="point">
+                    lon: <input type="text" id="origenLon" class="coords" placeholder="Ej: -71.336852">
+                    lat: <input type="text" id="origenLat" class="coords" placeholder="Ej: -29.947497">
+                </div>
+            </div>
+            <div class="upload-text">
+                <h3>Destino</h3>
+                <div class="point">
+                    lon: <input type="text" id="destinoLon" class="coords" placeholder="Ej: -71.336852">
+                    lat: <input type="text" id="destinoLat" class="coords" placeholder="Ej: -29.947497">
+                </div>
+            </div>
+        </div>
+
+        <div class="error-message" id="errorMessage">
+            <p id="errorText"></p>
+        </div>
+
+        <button class="submit-btn" id="submitBtn">Generar</button>
+    </div>
+    <script src="/static/js/generar_mapa.js"></script>
+</body>
+</html>

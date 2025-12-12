@@ -81,7 +81,7 @@ submitBtn.addEventListener('click', async () => {
             throw new Error("Se produjo un error en el procesamiento.");
         }
     } catch (error) {
-        console.error('Error during upload:', error);
+        console.error('Error de procesamiento:', error);
         showError('Error de procesamiento.');
     } finally {
         submitBtn.textContent = 'Procesar';
