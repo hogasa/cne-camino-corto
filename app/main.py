@@ -56,7 +56,7 @@ async def home():
         return f.read()
 
 
-@app.get("/api/generar_mapa")
+@app.get("/api/generar_mapa/")
 async def api_generar_mapa(origen_lon: float, origen_lat: float, destino_lon: float, destino_lat: float):
     try:
         response = generar_mapa([origen_lon, origen_lat], [destino_lon, destino_lat])

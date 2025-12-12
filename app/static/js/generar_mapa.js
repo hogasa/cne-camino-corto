@@ -32,7 +32,6 @@ submitBtn.addEventListener('click', async () => {
             destino_lon: destinoLon.value,
             destino_lat: destinoLat.value
         };
-        
         const queryString = new URLSearchParams(queryParams).toString();
         const response = await fetch(`/api/generar_mapa/?${queryString}`, {
             method: 'GET'
