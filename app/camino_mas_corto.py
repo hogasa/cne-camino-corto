@@ -1,5 +1,7 @@
 import psycopg2
 import json
+import folium
+import shapely
 
 
 def camino_mas_corto(source, target):
@@ -50,7 +52,7 @@ def camino_mas_corto(source, target):
 
             # 5. Obtener la geometría de la ruta como un MultiLineString unificado
             query_route = """
-                SELECT ST_AsEWKT(ST_Union(geom_way)), SUM(km), SUM(km / kmh)
+                SELECT ST_AsText(ST_Union(geom_way)), SUM(km), SUM(km / kmh)
                 FROM chile_2po_4pgr
                 WHERE id IN (%s);
             """ % ','.join(route_ids)
@@ -62,3 +64,62 @@ def camino_mas_corto(source, target):
 
     except:
         return ['MULTILINESTRING EMPTY', 0, 0]
+
+
+def generar_mapa(source, target):
+    # Calcular ruta
+    ruta = camino_mas_corto(source, target)
+
+    # Cambiar lon/lat por lat/lon
+    source.reverse()
+    target.reverse()
+
+    # Crear mapa
+    m = folium.Map(location=source, zoom_start=13)
+
+    # Agregar marcador origen
+    folium.Marker(
+        location=source,
+        popup="Origen",
+        icon=folium.Icon(color="green")
+    ).add_to(m)
+
+    # Agregar marcador destino
+    folium.Marker(
+        location=target,
+        popup="Destino",
+        icon=folium.Icon(color="red")
+    ).add_to(m)
+
+    # Convertir  WKT en geojson
+    geometry = shapely.from_wkt(ruta[0])
+    geojson_string = shapely.to_geojson(geometry)
+    geojson_string = '{"properties": {"nombre": "Hola"},' + geojson_string[1:]
+    print(ruta[1], ruta[2])
+    popup_text = f"<b>Distancia:</b> {round(ruta[1], 2)} Km<br><b>Tiempo:</b> {num2hour(ruta[2])}"
+
+    # Agregar ruta
+    folium.GeoJson(
+        geojson_string,
+        name='Ruta',
+        weight=3,
+        popup=folium.Popup(popup_text, min_width=120, max_width=120)
+    ).add_to(m)
+
+    folium.FitOverlays().add_to(m)
+
+    # Agregar controles de capas
+    folium.LayerControl().add_to(m)
+
+    full_html_code = m.get_root().render()
+    return full_html_code
+    # # 9. Guardar el mapa en un archivo HTML
+    # m.save("./static/ruta.html")
+
+
+def num2hour(time):
+    hours = int(time)
+    minutes = (time*60) % 60
+    seconds = (time*3600) % 60
+
+    return("%d:%02d.%02d" % (hours, minutes, seconds))
