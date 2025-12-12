@@ -8,10 +8,6 @@ const errorText = document.getElementById('errorText');
 
 
 submitBtn.addEventListener('click', async () => {
-    hideError();
-    submitBtn.textContent = 'Generando';
-    submitBtn.disabled = true;
-
     try {
         if (!isNumeric(origenLon.value)) {
             throw new Error("Debe indicar la longitud del origen en formato numérico.");
@@ -25,6 +21,10 @@ submitBtn.addEventListener('click', async () => {
         if (!isNumeric(destinoLat.value)) {
             throw new Error("Debe indicar la latitud del destino en formato numérico.");
         }
+
+        hideError();
+        submitBtn.textContent = 'Generando';
+        submitBtn.disabled = true;
 
         const queryParams = {
             origen_lon: origenLon.value,
@@ -67,7 +67,7 @@ function openHtmlWindow(htmlString) {
     const newWindow = window.open("", "_blank");
     if (newWindow) {
         newWindow.document.write(htmlString);
-        newWindow.document.title = 'Mapa de ruteo';
+        newWindow.document.title = 'Mapa de recorrido';
         newWindow.document.close(); 
     } else {
         throw new Error("Pop-up bloqueado. Por favor permita abrir pop-ups para este sitio.");
