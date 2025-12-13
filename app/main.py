@@ -4,6 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from io import StringIO
 import csv
 from camino_mas_corto import camino_mas_corto, generar_mapa
+from datetime import datetime
 
 app = FastAPI()
 
@@ -19,12 +20,17 @@ async def home():
 async def caminos_mas_cortos(file: UploadFile = File(...)):
     response = []
     try:
+        print("Comienzo:", datetime.now())
         if file.size == 0:
             raise Exception("No se especificó el archivo.")
         content = await file.read()
         myCsv = StringIO(content.decode('utf-8'))
         reader = csv.reader(myCsv, delimiter=',')
+        count = 0
         for row in reader:
+            count += 1
+            if (count % 50) == 0:
+                print("count", count, "", datetime.now())
             source = [float(row[1]), float(row[2])]
             target = [float(row[4]), float(row[5])]
             caminos = camino_mas_corto(source, target)
@@ -39,6 +45,7 @@ async def caminos_mas_cortos(file: UploadFile = File(...)):
                 "distancia": round(caminos[1], 2),
                 "tiempo": round(caminos[2], 2)
             })
+        print("Fin:", datetime.now())
         return JSONResponse(
             content=response,
             headers={"Content-Disposition": "attachment;filename=rutas.json"},

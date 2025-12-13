@@ -2,7 +2,7 @@ import psycopg2
 import json
 import folium
 import shapely
-
+from datetime import datetime
 
 def camino_mas_corto(source, target):
     conn = psycopg2.connect(
@@ -17,8 +17,11 @@ def camino_mas_corto(source, target):
             query_edge = """
                 WITH ce AS (
                     SELECT id, source, target,
-                        ST_Distance(geom_way, ST_SetSRID(ST_MakePoint(%s, %s), 4326)) AS dist
-                    FROM chile_2po_4pgr
+                        ST_Distance(geom_way, punto) AS dist
+                    FROM (
+                        SELECT id, source, target, geom_way, punto
+                        FROM (SELECT *, ST_SetSRID(ST_MakePoint(%s, %s), 4326) AS punto FROM chile_2po_4pgr)
+                        WHERE ST_DWithin(punto, geom_way, 0.1))
                     ORDER BY dist
                     LIMIT 1
                 )
@@ -26,7 +29,7 @@ def camino_mas_corto(source, target):
             """
 
             # 1. Obtener el edge más cercano a A
-            cur.execute(query_edge , (source[0], source[1]))
+            cur.execute(query_edge, (source[0], source[1]))
             edgeA_id, edgeA_source, edgeA_target = cur.fetchone()
 
             # 2. Obtener el edge más cercano a B
@@ -48,7 +51,6 @@ def camino_mas_corto(source, target):
             cur.execute(query_dijkstra, (nodo_inicio, nodo_fin))
             rows = cur.fetchall()
             route_ids = list(map(lambda x: str(x[0]), rows))
-            # print(route_ids)
 
             # 5. Obtener la geometría de la ruta como un MultiLineString unificado
             if not route_ids:
@@ -60,11 +62,11 @@ def camino_mas_corto(source, target):
             """ % ','.join(route_ids)
             cur.execute(query_route)
             route_geom_union = cur.fetchone()
-            # print(route_geom_union)
             conn.close()
             return(list(route_geom_union))
 
-    except:
+    except Exception as e:
+        print(e)
         return ['MULTILINESTRING EMPTY', 0, 0]
 
 
