@@ -57,7 +57,7 @@ removeBtn.addEventListener('click', () => {
 
 submitBtn.addEventListener('click', async () => {
     const formData = new FormData();
-    formData.append('file', fileInput.files[0]);
+    formData.append('file', selectedFile);
     hideError();
     hideSuccess();
     submitBtn.textContent = 'Procesando';
