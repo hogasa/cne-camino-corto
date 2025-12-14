@@ -526,5 +526,6 @@ div.upload-text {
 }
 
 input[type="text"].coords {
-    width: 167px;
+    width: 150px;
+    margin-right: 10px;
   }
