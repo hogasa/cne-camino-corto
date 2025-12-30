@@ -98,7 +98,6 @@ def generar_mapa(source, target):
     # Convertir  WKT en geojson
     geometry = shapely.from_wkt(ruta[0])
     geojson_string = shapely.to_geojson(geometry)
-    geojson_string = '{"properties": {"nombre": "Hola"},' + geojson_string[1:]
 
     popup_text = f"<b>Distancia:</b> {round(ruta[1], 2)} Km<br><b>Tiempo:</b> {num2hour(ruta[2])}"
 
