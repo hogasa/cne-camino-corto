@@ -1,10 +1,10 @@
-Puerto coquimbo, -71.336852, -29.947497, Subestacion el Peñon, -71.227872, -30.143531
-Puerto coquimbo, -71.336852, -29.947497, Subestacion  Lo Aguirre, -70.888373, -33.453428
-Puerto coquimbo, -71.336852, -29.947497, Subestacion Ancoa, -71.381378, -35.680781
-Puerto Valparaiso, -71.629787, -33.033841, Subestacion el Peñon, -71.227872, -30.143531
-Puerto Valparaiso, -71.629787, -33.033841, Subestacion  Lo Aguirre, -70.888373, -33.453428
-Puerto Valparaiso, -71.629787, -33.033841, Subestacion Ancoa, -71.381378, -35.680781
-Subestacion el Peñon, -71.227872, -30.143531, Subestacion  Lo Aguirre, -70.888373, -33.453428
-Subestacion el Peñon, -71.227872, -30.143531, Subestacion Ancoa, -71.381378, -35.680781
-Subestacion  Lo Aguirre, -70.888373, -33.453428, Subestacion Ancoa, -71.381378, -35.680781
-Buenos Aires, -58.387311, -34.615289, Puerto Valparaiso, -71.629787, -33.033841
+Puerto coquimbo,-71.336852,-29.947497,"Subestacion, el Peñon",-71.227872,-30.143531
+Puerto coquimbo,-71.336852,-29.947497,Subestacion Lo Aguirre,-70.888373,-33.453428
+Puerto coquimbo,-71.336852,-29.947497,Subestacion Ancoa,-71.381378,-35.680781
+Puerto Valparaiso,-71.629787,-33.033841,"Subestacion, el Peñon",-71.227872,-30.143531
+Puerto Valparaiso,-71.629787,-33.033841,Subestacion Lo Aguirre,-70.888373,-33.453428
+Puerto Valparaiso,-71.629787,-33.033841,Subestacion Ancoa,-71.381378,-35.680781
+"Subestacion, el Peñon",-71.227872,-30.143531,Subestacion Lo Aguirre,-70.888373,-33.453428
+"Subestacion, el Peñon",-71.227872,-30.143531,Subestacion Ancoa,-71.381378,-35.680781
+Subestacion Lo Aguirre,-70.888373,-33.453428,Subestacion Ancoa,-71.381378,-35.680781
+Buenos Aires,-58.387311,-34.615289,Puerto Valparaiso,-71.629787,-33.033841
