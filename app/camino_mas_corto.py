@@ -30,10 +30,14 @@ def camino_mas_corto(source, target):
 
             # 1. Obtener el edge más cercano a A
             cur.execute(query_edge, (source[0], source[1]))
+            if cur.rowcount == 0:
+                raise Exception("- No se pudo hayar un eje cercano a la coordenada de origen (%s,%s)" % (source[0], source[1]))
             edgeA_id, edgeA_source, edgeA_target = cur.fetchone()
 
             # 2. Obtener el edge más cercano a B
             cur.execute(query_edge, (target[0], target[1]))
+            if cur.rowcount == 0:
+                raise Exception("- No se pudo hayar un eje cercano a la coordenada de destino (%s,%s)" % (target[0], target[1]))
             edgeB_id, edgeB_source, edgeB_target = cur.fetchone()
 
             # 3. Definir el nodo inicio y final (simplificación: usemos el source del edge más cercano a A y el target del edge más cercano a B)

@@ -71,9 +71,7 @@ submitBtn.addEventListener('click', async () => {
 
         if (response.ok) {
             const blob = await response.blob();
-            const blobUrl = URL.createObjectURL(blob);
-            saveFile(blobUrl, 'rutas.json');
-            URL.revokeObjectURL(blobUrl);
+            saveFile(blob, 'rutas.csv');
 
             showSuccess('Archivo procesado con éxito.');
         } else {
@@ -140,11 +138,13 @@ function hideSuccess() {
     successMessage.classList.remove('active');
 }
 
-function saveFile(url, filename) {
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename || "file-name";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+function saveFile(blob, filename) {
+    const blobUrl = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = blobUrl;
+    a.download = filename || "file-name";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(blobUrl);
 }

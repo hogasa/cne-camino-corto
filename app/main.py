@@ -1,5 +1,5 @@
 from fastapi import FastAPI, UploadFile, File
-from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi.responses import JSONResponse, HTMLResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 from io import StringIO
 import csv
@@ -25,7 +25,7 @@ async def caminos_mas_cortos(file: UploadFile = File(...)):
             raise Exception("No se especificó el archivo.")
         content = await file.read()
         myCsv = StringIO(content.decode('utf-8'))
-        reader = csv.reader(myCsv, delimiter=',')
+        reader = csv.reader(myCsv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         count = 0
         for row in reader:
             count += 1
@@ -46,11 +46,27 @@ async def caminos_mas_cortos(file: UploadFile = File(...)):
                 "tiempo": round(caminos[2], 2)
             })
         print("Fin:", datetime.now())
-        return JSONResponse(
-            content=response,
-            headers={"Content-Disposition": "attachment;filename=rutas.json"},
-            media_type="application/json",
-            status_code=200)
+
+        with StringIO() as csvfile:
+            fieldnames = response[0].keys()
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(response)
+            # Get the resulting CSV string
+            csv_string = csvfile.getvalue()
+
+        return PlainTextResponse(
+            content=csv_string,
+            headers={"Content-Disposition": "attachment;filename=rutas.csv"},
+            media_type="text/plain",
+            status_code=200
+        )
+
+        # return JSONResponse(
+        #     content=response,
+        #     headers={"Content-Disposition": "attachment;filename=rutas.json"},
+        #     media_type="application/json",
+        #     status_code=200)
     except Exception as e:
         return JSONResponse(content={
             "error": str(e)
