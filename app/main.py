@@ -20,7 +20,8 @@ async def home():
 async def caminos_mas_cortos(file: UploadFile = File(...)):
     response = []
     try:
-        print("Comienzo:", datetime.now())
+        inicio = datetime.now()
+        print("Inicio:", inicio)
         if file.size == 0:
             raise Exception("No se especificó el archivo.")
         content = await file.read()
@@ -41,11 +42,13 @@ async def caminos_mas_cortos(file: UploadFile = File(...)):
                 "destino": row[3].strip(),
                 "destino_lon": row[4].strip(),
                 "destino_lat": row[5].strip(),
-                "ruta": caminos[0],
                 "distancia": round(caminos[1], 2),
-                "tiempo": round(caminos[2], 2)
+                "tiempo": round(caminos[2], 2),
+                "ruta": caminos[0]
             })
-        print("Fin:", datetime.now())
+        fin = datetime.now()
+        print("Fin:", fin)
+        print("Tiempo de ejecución:", fin - inicio)
 
         with StringIO() as csvfile:
             fieldnames = response[0].keys()
